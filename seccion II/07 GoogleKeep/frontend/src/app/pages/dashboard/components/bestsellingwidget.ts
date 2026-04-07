@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
+import { BasicService } from '@/app/service/basic.service';
 
 @Component({
     standalone: true,
@@ -93,12 +94,21 @@ import { MenuModule } from 'primeng/menu';
     </div>`
 })
 export class BestSellingWidget implements OnInit {
+
+    service = inject(BasicService);
+    entityId = 1;
+
+    ngOnInit(): void {
+        console.warn('Hola Mundo!!!!!!!!!!!!!!!!!');
+        this.service.basePost(`notecontroller/getbyid/${this.entityId}`, {}).subscribe(
+            response => console.log(response),
+            error => console.error(error)
+        );
+    }
     menu = null;
 
     items = [
         { label: 'Add New', icon: 'pi pi-fw pi-plus' },
         { label: 'Remove', icon: 'pi pi-fw pi-trash' }
     ];
-    ngOnInit(): void {
-    }
 }
