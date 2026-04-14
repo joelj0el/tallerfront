@@ -1,18 +1,62 @@
-import { Component } from '@angular/core';
+import { AfterContentInit, Component, ViewChild } from '@angular/core';
 import { FluidModule } from 'primeng/fluid';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { TextareaModule } from 'primeng/textarea';
+import { CommonModule } from '@angular/common';
+
+export class BasicModel {
+    firstname: string = "";
+    lastname: string = "";
+}
 
 @Component({
     selector: 'app-formlayout-demo',
     standalone: true,
-    imports: [InputTextModule, FluidModule, ButtonModule, SelectModule, FormsModule, TextareaModule],
+    imports: [
+        CommonModule,
+        InputTextModule, 
+        FluidModule, 
+        ButtonModule, 
+        SelectModule, 
+        FormsModule, 
+        TextareaModule
+    ],
     template: `<p-fluid>
         <div class="flex flex-col md:flex-row gap-8">
-            <div class="md:w-1/2">
+            <form #basicForm="ngForm" role="form">
+                <div class="card flex flex-col gap-4">
+                    <div class="font-semibold text-xl">Inline</div>
+                    <div class="flex flex-wrap items-start gap-6">
+                        <div class="field">
+                            <label for="firstname" class="sr-only">Firstname</label>
+                            <input pInputText 
+                            id="firstname"
+                            name="firstname" type="text" placeholder="Firstname" 
+                            [(ngModel)]="entity.firstname"
+                            #firstname="ngModel"
+                            required/>
+                            <div *ngIf="firstname.invalid && (firstname.dirty || firstname.touched)" class="p-error">
+                                <small *ngIf="firstname.errors?.['required']">Firstname is required</small>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="lastname" class="sr-only">Lastname</label>
+                            <input pInputText id="lastname" name="lastname" type="text" placeholder="Lastname" 
+                            [(ngModel)]="entity.lastname"
+                            #lastname="ngModel"
+                            required/>
+                            <div *ngIf="lastname.invalid && (lastname.dirty || lastname.touched)" class="p-error">
+                                <small *ngIf="lastname.errors?.['required']">Lastname is required</small>
+                            </div>
+                        </div>
+                        <p-button label="Submit" [fluid]="false"></p-button>
+                    </div>
+                </div>
+            </form>
+            <!-- <div class="md:w-1/2">
                 <div class="card flex flex-col gap-4">
                     <div class="font-semibold text-xl">Vertical</div>
                     <div class="flex flex-col gap-2">
@@ -82,10 +126,10 @@ import { TextareaModule } from 'primeng/textarea';
                         <small>Enter your username to reset your password.</small>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
 
-        <div class="flex mt-8">
+        <!-- <div class="flex mt-8">
             <div class="card flex flex-col gap-6 w-full">
                 <div class="font-semibold text-xl">Advanced</div>
                 <div class="flex flex-col md:flex-row gap-6">
@@ -115,10 +159,26 @@ import { TextareaModule } from 'primeng/textarea';
                     </div>
                 </div>
             </div>
-        </div>
-    </p-fluid>`
+        </div> -->
+    </p-fluid>`,
+    styles: [`
+        .p-error {
+            color: red;
+        }
+    `
+    ]
 })
-export class FormLayoutDemo {
+export class FormLayoutDemo implements AfterContentInit {
+    
+    @ViewChild('basicForm', {static: true}) currentForm!: NgForm;
+    entity = new BasicModel();
+
+    ngAfterContentInit(): void {
+        this.currentForm.valueChanges?.subscribe(value => {
+            console.log(value);
+        });
+    }
+
     dropdownItems = [
         { name: 'Option 1', code: 'Option 1' },
         { name: 'Option 2', code: 'Option 2' },
