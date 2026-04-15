@@ -22,7 +22,7 @@ import { UsuarioComponent } from "../usuario/usuario.component";
         ButtonModule,
         ConfirmDialogModule,
         // ToastModule
-        // UsuarioComponent
+        UsuarioComponent
     ],
     providers: [
         ConfirmationService, 
@@ -32,8 +32,9 @@ import { UsuarioComponent } from "../usuario/usuario.component";
 })
 export class UsuarioListComponent implements OnInit {
 
-    // @ViewChild(UsuarioComponent) usuarioComponent!: UsuarioComponent;
+    @ViewChild(UsuarioComponent) usuarioComponent!: UsuarioComponent;
     date: Date = new Date();
+    // dataUsuarios: UsuarioModel[] = [];
     dataUsuarios = signal<UsuarioModel[]>([]);
 
     // Services
@@ -53,17 +54,18 @@ export class UsuarioListComponent implements OnInit {
         this.service.basePost(`usuariocontroller/getall`, {}).subscribe(
             (response: UsuarioModel[]) => {
                 console.warn('Usuarios', response);
+                this.dataUsuarios.set(response);
             },
             error => console.error(error)
         );
     }
 
     createUsuario() {
-        // this.usuarioComponent.load(0);
+        this.usuarioComponent.load(0);
     }
 
     updateUsuario(data: UsuarioModel) {
-        // this.usuarioComponent.load(data.id);
+        this.usuarioComponent.load(data.id);
     }
 
     deleteUsuario(data: UsuarioModel, event: Event) {

@@ -32,20 +32,24 @@ import { UsuarioModel } from "../shared/usuario.model";
 export class UsuarioComponent {
     http = inject(BasicService);
     visible = signal<boolean>(false);
-    // entity = signal<UsuarioModel>(new UsuarioModel());
-    // @Output() messageEvent = new EventEmitter<boolean>();
+    entity = signal<UsuarioModel>(new UsuarioModel());
+    @Output() messageEvent = new EventEmitter<boolean>();
 
-    constructor() {
+    load(entityId: number){
+        this.onDialogVisibleChange(true);
     }
 
-    load(entityId: number): void {
-        console.warn('Load Usuario', entityId);
-        // this.entity.set(new UsuarioModel());
-        // this.onDialogVisibleChange(true);
-    }
-
-    saveChanges() {
-        // save entity or update entity
+    saveMethod() {
+        // console.warn('Entity to save', this.entity());
+        // this.closeDialog();
+        this.http.basePost('usuariocontroller/save', this.entity()).subscribe(
+            response => {
+                console.warn('Save response', response);
+                this.closeDialog();
+                this.messageEvent.emit();
+            },
+            error => console.error(error)
+        );
     }
 
     onDialogVisibleChange(value: boolean): void {

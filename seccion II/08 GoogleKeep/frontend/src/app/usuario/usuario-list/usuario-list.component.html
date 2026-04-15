@@ -6,6 +6,12 @@
         [(ngModel)]="date"
         />
     </div> -->
+    <div class="card flex justify-center">
+        <button pButton (click)="createUsuario()">
+            <i class="pi pi-plus" pButtonIcon></i>
+            <span pButtonLabel>Nuevo</span>
+        </button>
+    </div>
     <p-table [value]="dataUsuarios()" [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template #header>
             <tr>
@@ -31,4 +37,5 @@
     <!-- <p-toast /> -->
     <p-confirmdialog />
     <!-- <app-usuario></app-usuario> -->
+    <app-usuario (messageEvent)="loadUsuarios()"></app-usuario>
 </div>
