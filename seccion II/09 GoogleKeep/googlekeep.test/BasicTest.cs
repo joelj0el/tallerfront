@@ -18,7 +18,7 @@ namespace googlekeep.test
         public void TestGetAll()
         {
             var result = usuarioBusiness.getAll();
-            if(result.Count == 0)
+            if(result.Count != 0)
                 Assert.Pass("Success");
             else
                 Assert.Fail("Failed");
