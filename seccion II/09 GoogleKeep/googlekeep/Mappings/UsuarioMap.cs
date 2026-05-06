@@ -19,7 +19,7 @@ namespace googlekeep.Mappings
             Map(x => x.email);
             Map(x => x.password);
             Map(x => x.created_at);
-            Map(x => x.updated_at);
+            Map(x => x.updated_at).Nullable();
         }
     }
 }
