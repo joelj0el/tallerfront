@@ -1,4 +1,5 @@
-﻿using FluentNHibernate.Mapping;
+using FluentNHibernate.Mapping;
+using googlekeep.Business;
 using googlekeep.Entity;
 
 namespace googlekeep.Mappings
@@ -8,9 +9,11 @@ namespace googlekeep.Mappings
         public UsuarioMap()
         {
             Table("usuario");
-            Id(x => x.id).Column("usuario_id").CustomType<int>()
-                    .GeneratedBy.Custom<global::NHibernate.Id.IdentityGenerator>()
-                    .UnsavedValue(null);
+            Id(x => x.id).Column("usuario_id")
+                //.CustomType<int>()
+                //.GeneratedBy.Custom<global::NHibernate.Id.IdentityGenerator>();
+                .GeneratedBy.Sequence("usuario_usuario_id_seq")
+                .UnsavedValue(0);
             Map(x => x.name);
             // add all properties of the Person class here
             Map(x => x.email);

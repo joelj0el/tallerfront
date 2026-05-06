@@ -16,6 +16,11 @@ namespace googlekeep.Business
         {
             return repository.getAll();
         }
+        public int getLastId()
+        {
+            var result = repository.getAll().OrderByDescending(src => src.id).FirstOrDefault();
+            return result!.id;
+        }
 
         public Usuario SaveOrUpdate(Usuario entity)
         {
@@ -23,7 +28,13 @@ namespace googlekeep.Business
                 entity.created_at = DateTime.Now;
             else
                 entity.updated_at = DateTime.Now;
-            return (entity.id != 0) ? repository.Update(entity) :repository.Save(entity);
+            return (entity.id != 0) 
+                ? repository.Update(entity) 
+                : repository.Save(entity);
         }
+
+        // TODO: Implmentar metodo para recuperar por Id
+
+        // TODO: Implmentar metodo para eliminar un objeto
     }
 }

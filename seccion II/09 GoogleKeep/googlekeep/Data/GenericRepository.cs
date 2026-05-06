@@ -1,7 +1,8 @@
-﻿using FluentNHibernate.Cfg;
+using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
-using googlekeep.Entity;
+using FluentNHibernate.Data;
 using googlekeep.Business.Contracts;
+using googlekeep.Entity;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 
@@ -56,8 +57,12 @@ namespace googlekeep.Data
         {
             using (ISession nhSession = SessionCore.OpenSession())
             {
-                nhSession.Save(entity);
-                return entity;
+                using (ITransaction transaction = nhSession.BeginTransaction())
+                {
+                    nhSession.Save(entity);
+                    transaction.Commit();
+                    return entity;
+                }
             }
         }
 
@@ -78,7 +83,11 @@ namespace googlekeep.Data
         {
             using (ISession nhSession = SessionCore.OpenSession())
             {
-                nhSession.Delete(t);
+                using (ITransaction transaction = nhSession.BeginTransaction())
+                {
+                    nhSession.Delete(t);
+                    transaction.Commit();
+                }
             }
         }
     }
