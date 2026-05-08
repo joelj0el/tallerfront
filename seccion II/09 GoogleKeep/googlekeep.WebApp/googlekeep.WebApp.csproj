@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="google.server">
+      <HintPath>..\..\..\..\.NET_Proyects\google\lib\google.server.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

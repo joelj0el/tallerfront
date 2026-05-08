@@ -34,7 +34,14 @@ namespace googlekeep.Business
         }
 
         // TODO: Implmentar metodo para recuperar por Id
-
+        public Usuario getById(int id)
+        {
+            return repository.GetById(id);
+        }
         // TODO: Implmentar metodo para eliminar un objeto
+        public void delete(Usuario entity)
+        {
+            repository.Delete(entity);
+        }
     }
 }

@@ -6,5 +6,7 @@ namespace googlekeep.Business.Contracts
     {
         // agregar mis metodos
         List<Usuario> getAll();
+
+        List<Usuario> filterByName(string data);
     }
 }
