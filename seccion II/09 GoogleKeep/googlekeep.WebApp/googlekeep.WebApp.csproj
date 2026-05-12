@@ -7,9 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="google.server">
-      <HintPath>..\..\..\..\.NET_Proyects\google\lib\google.server.dll</HintPath>
+    <Reference Include="googlekeep">
+      <HintPath>..\lib\googlekeep.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentNHibernate" Version="3.4.1" />
+    <PackageReference Include="NHibernate" Version="5.6.0" />
+    <PackageReference Include="Npgsql" Version="10.0.2" />
   </ItemGroup>
 
 </Project>
