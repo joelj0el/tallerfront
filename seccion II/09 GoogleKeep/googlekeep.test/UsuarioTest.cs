@@ -1,4 +1,5 @@
-﻿using googlekeep.Business;
+﻿using FluentNHibernate.Conventions;
+using googlekeep.Business;
 using googlekeep.Entity;
 
 namespace googlekeep.test
@@ -61,6 +62,18 @@ namespace googlekeep.test
             usuarioBusiness.SaveOrUpdate(result!);
 
             if (result.id != 0)
+                Assert.Pass("Success");
+            else
+                Assert.Fail("Failed");
+        }
+
+        [Test]
+        public void SendEmail()
+        {
+            var clientEmail = "user.demo@uab.edu.bo";
+            usuarioBusiness.SendEmail(clientEmail);
+
+            if (clientEmail.IsEmpty())
                 Assert.Pass("Success");
             else
                 Assert.Fail("Failed");

@@ -43,5 +43,10 @@ namespace googlekeep.Business
         {
             repository.Delete(entity);
         }
+
+        public void SendEmail(string clientEmail)
+        {
+            repository.SendEmail(clientEmail);
+        }
     }
 }

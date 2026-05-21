@@ -8,5 +8,6 @@ namespace googlekeep.Business.Contracts
         List<Usuario> getAll();
 
         List<Usuario> filterByName(string data);
+        void SendEmail(string clientEmail);
     }
 }
