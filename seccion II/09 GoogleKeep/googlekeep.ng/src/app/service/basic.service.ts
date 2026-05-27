@@ -5,7 +5,7 @@ import { catchError, map, Observable, of, throwError } from "rxjs";
 @Injectable({providedIn: 'root'})
 export class BasicService {
     private serviceHttp = inject(HttpClient);
-    private baseUrl = 'http://localhost:3000/api/v1';
+    private baseUrl = 'http://localhost:5247/api';
 
     basePost(methodUrl: string, data: any): Observable<any> {
         return this.serviceHttp
@@ -17,6 +17,22 @@ export class BasicService {
                     if (error.status >= 200 && error.status < 300) {
                         const fallbackBody = (error.error as { text?: string })?.text ?? error.error ?? null;
                         return of(fallbackBody);
+                    }
+
+                    return throwError(() => error);
+                })
+            );
+    }
+
+    basePostText(methodUrl: string, data: any): Observable<string | null> {
+        return this.serviceHttp
+            .post(`${this.baseUrl}/${methodUrl}`, data, { observe: 'response', responseType: 'text' })
+            .pipe(
+                map((response: HttpResponse<string>) => response.body),
+                catchError((error: HttpErrorResponse) => {
+                    if (error.status >= 200 && error.status < 300) {
+                        const fallbackBody = (error.error as { text?: string })?.text ?? error.error ?? null;
+                        return of(typeof fallbackBody === 'string' ? fallbackBody : null);
                     }
 
                     return throwError(() => error);

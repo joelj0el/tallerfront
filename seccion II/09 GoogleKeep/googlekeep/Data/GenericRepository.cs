@@ -23,9 +23,9 @@ namespace googlekeep.Data
                 .Database(PostgreSQLConfiguration.Standard
                     .ConnectionString(cs => cs
                         .Host("127.0.0.1")
-                        .Port(5222)
-                        .Database("impocruz-db")
-                        .Username("postgres")
+                        .Port(5432)
+                        .Database("googlekeep-db")
+                        .Username("sa")
                         .Password("1844")
                     )
                     .DefaultSchema("public")

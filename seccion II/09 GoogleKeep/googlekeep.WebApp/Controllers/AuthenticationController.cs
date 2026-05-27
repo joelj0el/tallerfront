@@ -28,9 +28,16 @@ namespace googlekeep.WebApp.Controllers
             // validar el modelo
             if (password.IsEmpty() || email.IsEmpty())
                 return BadRequest("Invalid credentials!");
-            // verificar si existe en la base de datos
-            usuarioBusiness.Login(email, password);
-            return Ok();
+            try
+            {
+                // verificar si existe en la base de datos
+                usuarioBusiness.Login(email, password);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
         [Route("loginv2")]
         [HttpPost]
@@ -39,9 +46,16 @@ namespace googlekeep.WebApp.Controllers
             // validar el modelo
             if (entity.password.IsEmpty() || entity.email.IsEmpty())
                 return BadRequest("Invalid credentials!");
-            // verificar si existe en la base de datos
-            usuarioBusiness.Login(entity.email, entity.password);
-            return Ok();
+            try
+            {
+                // verificar si existe en la base de datos
+                usuarioBusiness.Login(entity.email, entity.password);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
         [Route("verifycode/{email}/{code}")]

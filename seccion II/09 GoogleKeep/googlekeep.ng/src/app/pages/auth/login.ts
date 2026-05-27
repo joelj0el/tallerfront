@@ -1,17 +1,26 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
+import { finalize } from 'rxjs';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
+import { AuthService } from '@/app/service/authService.service';
+
+export class LoginModel {
+    email: string = '';
+    password: string = '';
+    code: string = '';
+}
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppFloatingConfigurator],
+    imports: [CommonModule, ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppFloatingConfigurator],
     template: `
         <app-floating-configurator />
         <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
@@ -36,26 +45,45 @@ import { AppFloatingConfigurator } from '../../layout/component/app.floatingconf
                                     />
                                 </g>
                             </svg>
-                            <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to PrimeLand!</div>
-                            <span class="text-muted-color font-medium">Sign in to continue</span>
+                            <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to Google Keep</div>
+                            <span class="text-muted-color font-medium">{{ wizardStep() === 1 ? 'Sign in to continue' : 'Enter the verification code' }}</span>
                         </div>
 
-                        <div>
+                        <div class="flex items-center gap-3 mb-8">
+                            <div class="flex-1 rounded-full h-2" [class.bg-primary-500]="wizardStep() === 1" [class.bg-primary-200]="wizardStep() !== 1"></div>
+                            <div class="flex-1 rounded-full h-2" [class.bg-primary-500]="wizardStep() === 2" [class.bg-primary-200]="wizardStep() !== 2"></div>
+                        </div>
+
+                        <div *ngIf="feedbackMessage()" class="mb-6 rounded-2xl px-4 py-3 text-sm font-medium" [ngClass]="feedbackType() === 'error' ? 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-200' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-200'">
+                            {{ feedbackMessage() }}
+                        </div>
+
+                        <div *ngIf="wizardStep() === 1; else codeStep">
                             <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
-                            <input pInputText id="email1" type="text" placeholder="Email address" class="w-full md:w-120 mb-8" [(ngModel)]="email" />
+                            <input pInputText id="email1" type="text" placeholder="Email address" class="w-full md:w-120 mb-8" [(ngModel)]="entity.email" />
 
                             <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
-                            <p-password id="password1" [(ngModel)]="password" placeholder="Password" [toggleMask]="true" styleClass="mb-4" [fluid]="true" [feedback]="false"></p-password>
+                            <p-password id="password1" [(ngModel)]="entity.password" placeholder="Password" [toggleMask]="true" styleClass="mb-4 w-full" [fluid]="true" [feedback]="false"></p-password>
 
                             <div class="flex items-center justify-between mt-2 mb-8 gap-8">
-                                <div class="flex items-center">
+                                <!-- <div class="flex items-center">
                                     <p-checkbox [(ngModel)]="checked" id="rememberme1" binary class="mr-2"></p-checkbox>
                                     <label for="rememberme1">Remember me</label>
-                                </div>
-                                <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
+                                </div> -->
+                                <!-- <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span> -->
                             </div>
-                            <p-button label="Sign In" styleClass="w-full" routerLink="/"></p-button>
+                            <p-button label="Sign In" styleClass="w-full" [disabled]="loading()" (onClick)="login()"></p-button>
                         </div>
+
+                        <ng-template #codeStep>
+                            <label for="code1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Verification code</label>
+                            <input pInputText id="code1" type="text" placeholder="Enter the 2-step code" class="w-full md:w-120 mb-8" [(ngModel)]="entity.code" />
+
+                            <div class="flex gap-3">
+                                <p-button label="Back" severity="secondary" styleClass="w-full" [disabled]="loading()" (onClick)="wizardStep.set(1)"></p-button>
+                                <p-button label="Verify code" styleClass="w-full" [disabled]="loading()" (onClick)="verifyCode()"></p-button>
+                            </div>
+                        </ng-template>
                     </div>
                 </div>
             </div>
@@ -63,9 +91,56 @@ import { AppFloatingConfigurator } from '../../layout/component/app.floatingconf
     `
 })
 export class Login {
-    email: string = '';
+    http = inject(AuthService);
+    entity: LoginModel = new LoginModel();
+    wizardStep = signal(1);
+    loading = signal(false);
+    feedbackMessage = signal('');
+    feedbackType = signal<'success' | 'error'>('success');
+    returnUrl = '/';
 
-    password: string = '';
+    constructor(private route: Router, private activatedRoute: ActivatedRoute) {
+        this.returnUrl = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') ?? '/';
+    }
 
-    checked: boolean = false;
+    login() {
+        this.loading.set(true);
+        this.feedbackMessage.set('');
+
+        this.http
+            .login(this.entity.email, this.entity.password)
+            .pipe(finalize(() => this.loading.set(false)))
+            .subscribe({
+                next: (response) => {
+                    this.wizardStep.set(2);
+                    this.feedbackType.set('success');
+                    this.feedbackMessage.set(response?.message ?? 'Credenciales correctas. Ingresa el codigo de verificacion.');
+                },
+                error: (error) => {
+                    this.wizardStep.set(1);
+                    this.feedbackType.set('error');
+                    this.feedbackMessage.set(error?.error?.message ?? error?.error?.error ?? error?.message ?? 'No fue posible iniciar sesion.');
+                }
+            });
+    }
+
+    verifyCode() {
+        this.loading.set(true);
+        this.feedbackMessage.set('');
+
+        this.http
+            .verifycode(this.entity.email, this.entity.code)
+            .pipe(finalize(() => this.loading.set(false)))
+            .subscribe({
+                next: (response) => {
+                    this.feedbackType.set('success');
+                    this.feedbackMessage.set(response?.message ?? 'Autenticacion verificada. Redirigiendo...');
+                    this.route.navigateByUrl(this.returnUrl);
+                },
+                error: (error) => {
+                    this.feedbackType.set('error');
+                    this.feedbackMessage.set(error?.error?.message ?? error?.error?.error ?? error?.message ?? 'No fue posible verificar el codigo.');
+                }
+            });
+    }
 }

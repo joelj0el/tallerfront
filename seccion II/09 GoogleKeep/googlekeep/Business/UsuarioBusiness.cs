@@ -58,7 +58,7 @@ namespace googlekeep.Business
         {
             // generamos un codigo de 6 digitos
             var newCode = new Random().Next(0, 999999);
-            repository.SendEmail(clientEmail, newCode);
+            //repository.SendEmail(clientEmail, newCode);
             var entity = new GoogleSMTP()
             {
                 email = clientEmail,

@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36414.22 d17.14
+# Visual Studio Version 18
+VisualStudioVersion = 18.5.11723.231 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "googlekeep.WebApp", "googlekeep.WebApp.csproj", "{822C1050-EDD8-458B-99D5-40255B11E3D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "googlekeep", "..\googlekeep\googlekeep.csproj", "{CF00A8A9-FAC8-6588-EC7B-3D088BFA8ECE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{822C1050-EDD8-458B-99D5-40255B11E3D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{822C1050-EDD8-458B-99D5-40255B11E3D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{822C1050-EDD8-458B-99D5-40255B11E3D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF00A8A9-FAC8-6588-EC7B-3D088BFA8ECE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF00A8A9-FAC8-6588-EC7B-3D088BFA8ECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF00A8A9-FAC8-6588-EC7B-3D088BFA8ECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF00A8A9-FAC8-6588-EC7B-3D088BFA8ECE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

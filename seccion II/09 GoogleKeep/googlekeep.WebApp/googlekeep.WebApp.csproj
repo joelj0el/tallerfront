@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <Reference Include="googlekeep">
-      <HintPath>..\lib\Release\net9.0\googlekeep.dll</HintPath>
+      <HintPath>D:\GitHub\NestJS_FREE\seccion II\09 GoogleKeep\lib\Release\net9.0\googlekeep.dll</HintPath>
     </Reference>
   </ItemGroup>
 
