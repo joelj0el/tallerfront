@@ -7,15 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="googlekeep">
-      <HintPath>..\lib\googlekeep.dll</HintPath>
-    </Reference>
+    <PackageReference Include="FluentNHibernate" Version="3.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.16" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.18.0" />
+    <PackageReference Include="NHibernate" Version="5.6.0" />
+    <PackageReference Include="Npgsql" Version="10.0.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentNHibernate" Version="3.4.1" />
-    <PackageReference Include="NHibernate" Version="5.6.0" />
-    <PackageReference Include="Npgsql" Version="10.0.2" />
+    <Reference Include="googlekeep">
+      <HintPath>..\lib\Release\net9.0\googlekeep.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

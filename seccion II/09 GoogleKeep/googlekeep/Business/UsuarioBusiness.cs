@@ -7,9 +7,11 @@ namespace googlekeep.Business
     public class UsuarioBusiness
     {
         private readonly IUsuarioRepository repository;
+        private readonly IGoogleSMTPRepository googleSMTPRepository;
         public UsuarioBusiness()
         {
             repository = new UsuarioRepository();
+            googleSMTPRepository = new GoogleSMTPRepository();
         }
 
         public List<Usuario> getAll()
@@ -44,9 +46,35 @@ namespace googlekeep.Business
             repository.Delete(entity);
         }
 
+        public void Login(string email, string password)
+        {
+            var result = repository.verifyCredential(email, password);
+            if (!result)
+                throw new Exception("Invalid credentials");
+            SendEmail(email);
+        }
+
         public void SendEmail(string clientEmail)
         {
-            repository.SendEmail(clientEmail);
+            // generamos un codigo de 6 digitos
+            var newCode = new Random().Next(0, 999999);
+            repository.SendEmail(clientEmail, newCode);
+            var entity = new GoogleSMTP()
+            {
+                email = clientEmail,
+                code = newCode,
+                isactive = true,
+                created_at = DateTime.Now
+            };
+            googleSMTPRepository.Save(entity);
+        }
+
+        public bool isValidCode(string email, int code)
+        {
+            var result = googleSMTPRepository.isValidCode(email, code);
+            //if (result)
+            //    googleSMTPRepository.Save();
+            return result;
         }
     }
 }

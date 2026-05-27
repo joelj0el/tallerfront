@@ -1,12 +1,14 @@
 ﻿using googlekeep.Business;
 using googlekeep.Entity;
 using googlekeep.WebApp.models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
 namespace googlekeep.WebApp.Controllers
 {
     [Route("api/usuario")]
+    [Authorize]
     [ApiController]
     public class UsuarioController : ControllerBase
     {

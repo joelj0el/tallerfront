@@ -4,6 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <BaseOutputPath>D:\GitHub\NestJS_FREE\seccion II\09 GoogleKeep\lib</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

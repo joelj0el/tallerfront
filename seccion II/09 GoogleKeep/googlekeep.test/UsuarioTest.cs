@@ -55,10 +55,12 @@ namespace googlekeep.test
         [Test]
         public void TestSaveOrUpdate()
         {
-            var result = usuarioBusiness.getById(100) ?? new Usuario();
-            result.name = "Demo";
-            result.email = "Demo@mail.com";
-            result.password = "8008080";
+            var result = usuarioBusiness.getById(15000) ?? new Usuario();
+            result.name = "franzvladimir.mamani";
+            //result.email = "thistest91@gmail.com";
+            //result.password = "4dm1n15tr4d0r";
+            result.email = "franzvladimir.mamani@uab.edu.bo";
+            result.password = "u483dub0";
             usuarioBusiness.SaveOrUpdate(result!);
 
             if (result.id != 0)
@@ -70,10 +72,33 @@ namespace googlekeep.test
         [Test]
         public void SendEmail()
         {
-            var clientEmail = "user.demo@uab.edu.bo";
+            var clientEmail = "franzvladimir.mamani@uab.edu.bo";
             usuarioBusiness.SendEmail(clientEmail);
 
             if (clientEmail.IsEmpty())
+                Assert.Pass("Success");
+            else
+                Assert.Fail("Failed");
+        }
+
+        [Test]
+        public void Login()
+        {
+            var email = "franzvladimir.mamani@uab.edu.bo";
+            usuarioBusiness.Login(email, "u483dub0");
+            if (!email.IsEmpty())
+                Assert.Pass("Success");
+            else
+                Assert.Fail("Failed");
+        }
+
+        [Test]
+        public void IsValidCode()
+        {
+            var email = "thistest91@gmail.com";
+            var code2Factor = 735468;
+            var result = usuarioBusiness.isValidCode(email, code2Factor);
+            if (result)
                 Assert.Pass("Success");
             else
                 Assert.Fail("Failed");
